@@ -13,20 +13,16 @@ function App() {
 
     const API_URL = process.env.REACT_APP_API_URL;
 
-    // Функция загрузки погоды
     const loadWeather = async (cityName) => {
         if (!cityName.trim()) return;
-
         setLoading(true);
         setWeatherData(null);
-
         try {
             const response = await fetch(`${API_URL}/weather?city=${encodeURIComponent(cityName)}`);
             const data = await response.json();
-
             if (response.ok) {
                 setWeatherData(data);
-                setCity(cityName); // обновляем поле ввода
+                setCity(cityName);
             } else {
                 alert(data.error || 'Не удалось загрузить погоду');
             }
@@ -38,7 +34,6 @@ function App() {
         }
     };
 
-    // Автозагрузка при открытии с ?city=...
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const cityFromUrl = urlParams.get('city');
@@ -81,7 +76,45 @@ function App() {
                 onSearch={handleSearch}
             />
 
-            {showAdmin && <AdminPanel />}
+            {showAdmin && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        right: 0,
+                        width: '520px',
+                        height: '100%',
+                        backgroundColor: 'white',
+                        zIndex: 1002,
+                        boxShadow: '-4px 0 12px rgba(0,0,0,0.15)',
+                        overflowY: 'auto'
+                    }}
+                >
+                    <button
+                        onClick={() => setShowAdmin(false)}
+                        style={{
+                            position: 'absolute',
+                            top: '16px',
+                            right: '16px',
+                            background: '#f1f3f5',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '32px',
+                            height: '32px',
+                            fontSize: '1.2rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        ✕
+                    </button>
+                    <div style={{ padding: '20px', marginTop: '16px' }}>
+                        <AdminPanel />
+                    </div>
+                </div>
+            )}
 
             {loading && <p style={{ textAlign: 'center', color: '#666' }}>Загрузка...</p>}
             <WeatherCard weatherData={weatherData} />

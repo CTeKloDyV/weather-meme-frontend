@@ -12,10 +12,17 @@ export default function AdminPanel() {
     const fileInputRef = useRef(null);
 
     useEffect(() => {
+        if (!API_URL) {
+            setStatus('❌ API_URL не задан');
+            return;
+        }
         fetch(`${API_URL}/memes-list`)
             .then(res => res.json())
             .then(setMemes)
-            .catch(err => console.error('Ошибка загрузки мемов:', err));
+            .catch(err => {
+                console.error('Ошибка загрузки мемов:', err);
+                setStatus('❌ Не удалось загрузить мемы');
+            });
     }, []);
 
     const refreshMemes = () => {
@@ -79,45 +86,17 @@ export default function AdminPanel() {
     };
 
     return (
-        <div style={{
-            backgroundColor: '#fff',
-            padding: '24px',
-            borderRadius: '16px',
-            maxWidth: '520px',
-            margin: '30px auto',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
-            border: '1px solid #eaeaea'
-        }}>
-            <h3 style={{
-                marginBottom: '20px',
-                textAlign: 'center',
-                color: '#2c3e50',
-                fontWeight: '600',
-                fontSize: '1.3rem'
-            }}>🛠️ Админка: Мемы</h3>
+        <div style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '16px', boxShadow: '0 6px 20px rgba(0,0,0,0.08)', border: '1px solid #eaeaea' }}>
+            <h3 style={{ marginBottom: '20px', textAlign: 'center', color: '#2c3e50', fontWeight: '600', fontSize: '1.3rem' }}>🛠️ Админка: Мемы</h3>
             <form onSubmit={handleSubmit}>
-                <div style={{marginBottom: '16px'}}>
-                    <label
-                        style={{
-                            display: 'block',
-                            marginBottom: '8px',
-                            fontWeight: '500',
-                            color: '#34495e',
-                        }}
-                    >
+                <div style={{ marginBottom: '16px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#34495e' }}>
                         Категория (по температуре):
                     </label>
                     <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        style={{
-                            width: '100%',
-                            padding: '10px 12px',
-                            borderRadius: '10px',
-                            border: '1px solid #ced4da',
-                            backgroundColor: '#fafafa',
-                            fontSize: '1rem',
-                        }}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #ced4da', backgroundColor: '#fafafa', fontSize: '1rem' }}
                     >
                         <option value="hot">🔥 Жарко (≥30°C)</option>
                         <option value="warm">☀️ Тёпло (20–29°C)</option>
@@ -127,15 +106,8 @@ export default function AdminPanel() {
                     </select>
                 </div>
 
-                <div style={{marginBottom: '16px'}}>
-                    <label
-                        style={{
-                            display: 'block',
-                            marginBottom: '8px',
-                            fontWeight: '500',
-                            color: '#34495e',
-                        }}
-                    >
+                <div style={{ marginBottom: '16px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#34495e' }}>
                         Загрузить изображение:
                     </label>
                     <input
@@ -144,49 +116,24 @@ export default function AdminPanel() {
                         accept="image/*"
                         onChange={handleFileChange}
                         required
-                        style={{
-                            width: '100%',
-                            padding: '8px',
-                            border: '1px dashed #bdc3c7',
-                            borderRadius: '8px',
-                            backgroundColor: '#f8f9fa',
-                        }}
+                        style={{ width: '100%', padding: '8px', border: '1px dashed #bdc3c7', borderRadius: '8px', backgroundColor: '#f8f9fa' }}
                     />
                     {imageFile && (
-                        <div style={{marginTop: '10px', textAlign: 'center'}}>
+                        <div style={{ marginTop: '10px', textAlign: 'center' }}>
                             <img
                                 src={URL.createObjectURL(imageFile)}
                                 alt="Предпросмотр"
-                                style={{
-                                    width: '100px',
-                                    height: '100px',
-                                    objectFit: 'cover',
-                                    borderRadius: '8px',
-                                    border: '1px solid #ddd',
-                                }}
+                                style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #ddd' }}
                             />
-                            <p
-                                style={{
-                                    fontSize: '0.85rem',
-                                    color: '#7f8c8d',
-                                    marginTop: '4px',
-                                }}
-                            >
+                            <p style={{ fontSize: '0.85rem', color: '#7f8c8d', marginTop: '4px' }}>
                                 {imageFile.name}
                             </p>
                         </div>
                     )}
                 </div>
 
-                <div style={{marginBottom: '20px'}}>
-                    <label
-                        style={{
-                            display: 'block',
-                            marginBottom: '8px',
-                            fontWeight: '500',
-                            color: '#34495e',
-                        }}
-                    >
+                <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#34495e' }}>
                         Текст мема:
                     </label>
                     <textarea
@@ -195,138 +142,65 @@ export default function AdminPanel() {
                         placeholder="Когда на улице +35, а ты без кондиционера..."
                         required
                         rows="3"
-                        style={{
-                            width: '100%',
-                            padding: '10px 12px',
-                            borderRadius: '10px',
-                            border: '1px solid #ced4da',
-                            fontSize: '1rem',
-                            resize: 'vertical',
-                            backgroundColor: '#fafafa',
-                        }}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #ced4da', fontSize: '1rem', resize: 'vertical', backgroundColor: '#fafafa' }}
                     />
                 </div>
 
-                <button type="submit" style={{
-                    width: '100%',
-                    padding: '12px',
-                    backgroundColor: '#4361ee',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    cursor: 'pointer'
-                }}>
+                <button
+                    type="submit"
+                    style={{ width: '100%', padding: '12px', backgroundColor: '#4361ee', color: 'white', border: 'none', borderRadius: '10px', fontSize: '1rem', fontWeight: '600', cursor: 'pointer' }}
+                >
                     ➕ Добавить мем
                 </button>
-                {status && <p style={{
-                    marginTop: '14px',
-                    textAlign: 'center',
-                    color: status.includes('✅') || status.includes('🗑️') ? '#27ae60' : '#e74c3c',
-                    fontWeight: '500'
-                }}>{status}</p>}
+                {status && <p style={{ marginTop: '14px', textAlign: 'center', color: status.includes('✅') || status.includes('🗑️') ? '#27ae60' : '#e74c3c', fontWeight: '500' }}>{status}</p>}
             </form>
 
             {/* Таблица всех мемов */}
-            <div style={{marginTop: '30px'}}>
-                <h4 style={{marginBottom: '16px', color: '#2c3e50', textAlign: 'center'}}>
+            <div style={{ marginTop: '30px' }}>
+                <h4 style={{ marginBottom: '16px', color: '#2c3e50', textAlign: 'center' }}>
                     📋 Все мемы
                 </h4>
-
                 {Object.values(memes).some(cat => cat && cat.length > 0) ? (
-                    <div style={{overflowX: 'auto'}}>
-                        <table style={{width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem'}}>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                             <thead>
-                            <tr style={{backgroundColor: '#f8f9fa'}}>
-                                <th style={{
-                                    padding: '10px',
-                                    textAlign: 'left',
-                                    borderBottom: '2px solid #dee2e6'
-                                }}>Категория
-                                </th>
-                                <th style={{
-                                    padding: '10px',
-                                    textAlign: 'left',
-                                    borderBottom: '2px solid #dee2e6'
-                                }}>Изображение
-                                </th>
-                                <th style={{
-                                    padding: '10px',
-                                    textAlign: 'left',
-                                    borderBottom: '2px solid #dee2e6'
-                                }}>Текст
-                                </th>
-                                <th style={{
-                                    padding: '10px',
-                                    textAlign: 'center',
-                                    borderBottom: '2px solid #dee2e6'
-                                }}>Действие
-                                </th>
+                            <tr style={{ backgroundColor: '#f8f9fa' }}>
+                                <th style={{ padding: '10px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>Категория</th>
+                                <th style={{ padding: '10px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>Изображение</th>
+                                <th style={{ padding: '10px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>Текст</th>
+                                <th style={{ padding: '10px', textAlign: 'center', borderBottom: '2px solid #dee2e6' }}>Действие</th>
                             </tr>
                             </thead>
                             <tbody>
                             {['hot', 'warm', 'normal', 'cool', 'cold'].flatMap(cat =>
                                     (memes[cat] || []).map((meme, i) => (
-                                        <tr key={`${cat}-${i}`} style={{borderBottom: '1px solid #eee'}}>
-                                            <td style={{padding: '12px 10px', verticalAlign: 'top'}}>
-                  <span
-                      style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '4px',
-                          fontWeight: '500',
-                          color: cat === 'hot' ? '#e74c3c' :
-                              cat === 'cold' ? '#3498db' : '#2c3e50'
-                      }}
-                  >
-                    {cat === 'hot' && '🔥'}
-                      {cat === 'warm' && '☀️'}
-                      {cat === 'normal' && '🌤️'}
-                      {cat === 'cool' && '🌬️'}
-                      {cat === 'cold' && '❄️'}
-                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                  </span>
+                                        <tr key={`${cat}-${i}`} style={{ borderBottom: '1px solid #eee' }}>
+                                            <td style={{ padding: '12px 10px', verticalAlign: 'top' }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: '500', color: cat === 'hot' ? '#e74c3c' : cat === 'cold' ? '#3498db' : '#2c3e50' }}>
+                          {cat === 'hot' && '🔥'}
+                            {cat === 'warm' && '☀️'}
+                            {cat === 'normal' && '🌤️'}
+                            {cat === 'cool' && '🌬️'}
+                            {cat === 'cold' && '❄️'}
+                            {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                        </span>
                                             </td>
-                                            <td style={{padding: '12px 10px', verticalAlign: 'top', width: '100px'}}>
+                                            <td style={{ padding: '12px 10px', verticalAlign: 'top', width: '100px' }}>
                                                 <img
-                                                    src={meme.image.startsWith('http') ? meme.image : `http://localhost:5000${meme.image}`}
+                                                    src={meme.image.startsWith('http') ? meme.image : `${API_URL}${meme.image}`}
                                                     alt="Мем"
-                                                    style={{
-                                                        width: '80px',
-                                                        height: '60px',
-                                                        objectFit: 'cover',
-                                                        borderRadius: '4px',
-                                                        border: '1px solid #ddd'
-                                                    }}
+                                                    style={{ width: '80px', height: '60px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #ddd' }}
                                                 />
                                             </td>
-                                            <td style={{padding: '12px 10px', verticalAlign: 'top', maxWidth: '250px'}}>
-                                                <div
-                                                    style={{
-                                                        fontSize: '0.9rem',
-                                                        color: '#34495e',
-                                                        lineHeight: 1.4,
-                                                        wordBreak: 'break-word'
-                                                    }}
-                                                    title={meme.text}
-                                                >
+                                            <td style={{ padding: '12px 10px', verticalAlign: 'top', maxWidth: '250px' }}>
+                                                <div style={{ fontSize: '0.9rem', color: '#34495e', lineHeight: 1.4, wordBreak: 'break-word' }} title={meme.text}>
                                                     {meme.text}
                                                 </div>
                                             </td>
-                                            <td style={{padding: '12px 10px', verticalAlign: 'top', textAlign: 'center'}}>
+                                            <td style={{ padding: '12px 10px', verticalAlign: 'top', textAlign: 'center' }}>
                                                 <button
                                                     onClick={() => handleDelete(cat, i)}
-                                                    style={{
-                                                        padding: '6px 12px',
-                                                        fontSize: '0.85rem',
-                                                        backgroundColor: '#e74c3c',
-                                                        color: 'white',
-                                                        border: 'none',
-                                                        borderRadius: '6px',
-                                                        cursor: 'pointer',
-                                                        fontWeight: '500'
-                                                    }}
+                                                    style={{ padding: '6px 12px', fontSize: '0.85rem', backgroundColor: '#e74c3c', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}
                                                 >
                                                     Удалить
                                                 </button>
@@ -338,7 +212,7 @@ export default function AdminPanel() {
                         </table>
                     </div>
                 ) : (
-                    <p style={{textAlign: 'center', color: '#95a5a6', fontStyle: 'italic'}}>
+                    <p style={{ textAlign: 'center', color: '#95a5a6', fontStyle: 'italic' }}>
                         Нет сохранённых мемов
                     </p>
                 )}
