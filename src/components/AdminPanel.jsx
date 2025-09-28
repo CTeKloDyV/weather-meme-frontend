@@ -1,7 +1,7 @@
 // src/components/AdminPanel.jsx
 import React, { useState, useEffect, useRef } from 'react';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL;
 
 export default function AdminPanel() {
     const [category, setCategory] = useState('normal');

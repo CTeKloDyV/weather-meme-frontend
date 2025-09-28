@@ -11,7 +11,7 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [showAdmin, setShowAdmin] = useState(false);
 
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    const API_URL = process.env.REACT_APP_API_URL;
 
     // Функция загрузки погоды
     const loadWeather = async (cityName) => {
