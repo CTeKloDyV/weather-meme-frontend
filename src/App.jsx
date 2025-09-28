@@ -18,7 +18,7 @@ function App() {
         setWeatherData(null);
 
         try {
-            const response = await fetch(`/weather?city=${encodeURIComponent(city)}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/weather?city=${encodeURIComponent(city)}`);
             const data = await response.json();
 
             if (response.ok) {
