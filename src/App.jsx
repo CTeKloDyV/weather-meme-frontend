@@ -11,7 +11,7 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [showAdmin, setShowAdmin] = useState(false);
 
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
     const loadWeather = async (cityName) => {
         if (!cityName.trim()) return;
